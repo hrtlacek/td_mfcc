@@ -51,6 +51,19 @@ def makeMelFilterFreqs(numFilters, lowerFreq, uppperFreq, sr, frameSize):
     return fftBinNumbers
 
 
+def makeMelFilters(nFilters=40, sr=44100, frameLength=4096):
+    centerbins = makeMelFilterFreqs(nFilters, 0, sr/2, sr, frameLength)
+    centerbins = [0]+centerbins+[frameLength/2. - 1]
+    filters = np.zeros([int(frameLength/2), len(centerbins)])
+    for i in range(len(centerbins)-3):
+        start = int(centerbins[i])
+        center = int(centerbins[i+1])
+        end = int(centerbins[i+2])
+        filters[start:center, i] = np.linspace(0, 1, center-start)
+        filters[center:end, i] = np.linspace(1, 0, end-center)
+    return filters
+
+
 def aToDb(linArray, accuracy=10):
     # A = 20*log10(V2/V1)
     dbArray = 20.*np.log10(np.clip(linArray, 10**-accuracy, 10**accuracy))
