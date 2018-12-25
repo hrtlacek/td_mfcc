@@ -52,6 +52,7 @@ def makeMelFilterFreqs(numFilters, lowerFreq, uppperFreq, sr, frameSize):
 
 
 def makeMelFilters(nFilters=40, sr=44100, frameLength=4096):
+    nFilters = nFilters-4
     centerbins = makeMelFilterFreqs(nFilters, 0, sr/2, sr, frameLength)
     centerbins = [0]+centerbins+[frameLength/2. - 1]
     filters = np.zeros([int(frameLength/2), len(centerbins)])
